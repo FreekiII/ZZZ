@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "239635864891",
+    "firebase_url": "https://justbootupffs-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "justbootupffs",
+    "storage_bucket": "justbootupffs.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:239635864891:android:58ef03bbcba99abefeeb1e",
+        "android_client_info": {
+          "package_name": "com.example.justbootupffs"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "239635864891-q8f1rmu43gf2b5mt0vfcak21na89fosp.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBesZv7anbXGHcA_t9a2xA5zIjo4KNmQ2c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "239635864891-q8f1rmu43gf2b5mt0vfcak21na89fosp.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
