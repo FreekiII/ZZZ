@@ -19,13 +19,6 @@ public class RegisterFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_register, container, false);
-        init();
         return view;
-    }
-
-    private void init() {
-        textUsername = view.findViewById(R.id.editTextUsername);
-        textPassword = view.findViewById(R.id.editTextPassword);
-        textEmail = view.findViewById(R.id.editTextEmail);
     }
 }

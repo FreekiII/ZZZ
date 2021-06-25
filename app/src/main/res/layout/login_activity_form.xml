@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:minHeight="200dp"
-    android:padding="30dp">
+    android:padding="20dp">
 
     <FrameLayout
         android:id="@+id/parentFL"
@@ -23,7 +23,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="30dp"
         android:onClick="onClickSignIn"
-        android:text="Sign In"
+        android:text="Войти"
         android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@+id/buttonRegister"
         app:layout_constraintStart_toStartOf="parent"
@@ -35,7 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
         android:onClick="onClickRegister"
-        android:text="Register"
+        android:text="Регистрация"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/buttonSignIn"
         app:layout_constraintEnd_toEndOf="parent"
@@ -51,7 +51,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="30dp"
         android:onClick="onClickConfirm"
-        android:text="Confirm"
+        android:text="Подтвердить"
         android:visibility="gone"
         app:layout_constraintEnd_toStartOf="@+id/buttonCancel"
         app:layout_constraintStart_toStartOf="parent"
@@ -63,7 +63,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
         android:onClick="onClickCancel"
-        android:text="Cancel"
+        android:text="Отмена"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/buttonConfirm"
         app:layout_constraintEnd_toEndOf="parent"

@@ -1,20 +1,26 @@
 package com.example.justbootupffs.Entity;
 
-import android.net.Uri;
+import java.util.HashMap;
+import java.util.LinkedList;
 
 //POJO Class for users
 public class User {
-    public String id, username, email, password, description, profilePicture;
+    public String id, email, password, name, surname, age, profilePicture, description;
+    public HashMap<String, String> roles;
 
     public User() {
     }
 
-    public User(String id, String username, String email, String password) {
+    public User(String id, String name, String surname, String age, String email, String password) {
         this.id = id;
-        this.username = username;
         this.email = email;
         this.password = password;
+        this.name = name;
+        this.surname = surname;
+        this.age = age;
         profilePicture = "";
         description = "";
+        roles = new HashMap<>();
+        roles.put("USER", "1");
     }
 }

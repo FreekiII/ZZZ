@@ -18,6 +18,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.justbootupffs.Entity.User;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -27,12 +29,10 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.UUID;
-
 public class LoginActivity extends AppCompatActivity {
     public static final String USER_DATABASE = "User";
     public static final String DATABASE_URL = "https://justbootupffs-default-rtdb.europe-west1.firebasedatabase.app/";
-    private EditText textPassword, textEmail, textUsername;
+    private EditText textPassword, textEmail, textName, textSurname, textAge;
     private FrameLayout frameLayout;
     private Button buttonSignIn, buttonRegister, buttonConfirm, buttonCancel;
     private FirebaseAuth mAuth;
@@ -65,6 +65,7 @@ public class LoginActivity extends AppCompatActivity {
         buttonRegister = findViewById(R.id.buttonRegister);
         buttonConfirm = findViewById(R.id.buttonConfirm);
         buttonCancel = findViewById(R.id.buttonCancel);
+
         mAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance(DATABASE_URL).getReference(USER_DATABASE);
     }
@@ -120,13 +121,19 @@ public class LoginActivity extends AppCompatActivity {
         ConstraintLayout constraintLayout = (ConstraintLayout)frameLayout.getChildAt(0);
         textEmail = (EditText)constraintLayout.getViewById(R.id.editTextEmail);
         textPassword = (EditText)constraintLayout.getViewById(R.id.editTextPassword);
-        textUsername = (EditText)constraintLayout.getViewById(R.id.editTextUsername);
+        textName = (EditText)constraintLayout.getViewById(R.id.editTextName);
+        textSurname = (EditText)constraintLayout.getViewById(R.id.editTextSurname);
+        textAge = (EditText)constraintLayout.getViewById(R.id.editTextAge);
         String email = textEmail.getText().toString();
         //TODO Validation of email
         String password = textPassword.getText().toString();
         //TODO Validation of password
-        String username = textUsername.getText().toString();
-        //TODO Validation of username
+        String name = textName.getText().toString();
+        //TODO Validation of name
+        String surname = textSurname.getText().toString();
+        //TODO Validation of surname
+        String age = textAge.getText().toString();
+        //TODO Validation of age
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -138,10 +145,19 @@ public class LoginActivity extends AppCompatActivity {
 //                            sendEmailVerification();
 
                             String uid = mAuth.getCurrentUser().getUid();
-                            databaseReference.child(uid).setValue(new User(uid, username, email, password));
-
-                            mAuth.signOut();
-                            onClickCancel(view);
+                            databaseReference.child(uid).setValue(new User(uid, name, surname, age, email, password)).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+                                    mAuth.signOut();
+                                    onClickCancel(view);
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull @NotNull Exception e) {
+                                    Toast.makeText(view.getContext(), "User save failed",
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         } else {
                             Toast.makeText(view.getContext(), "Registration failed",
                                     Toast.LENGTH_SHORT).show();

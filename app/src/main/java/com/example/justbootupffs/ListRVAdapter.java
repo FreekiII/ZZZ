@@ -34,13 +34,14 @@ public class ListRVAdapter extends RecyclerView.Adapter<ListRVAdapter.ViewHolder
 
     @Override
     public void onBindViewHolder(@NotNull ListRVAdapter.ViewHolder holder, int position) {
-        holder.textView.setText(users.get(position).username);
+        holder.textView.setText(users.get(position).name + " " + users.get(position).surname);
         holder.constraintLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intentProfile = new Intent(v.getContext(), ProfileActivity.class);
+                Intent intentProfile = new Intent(context, ProfileActivity.class);
                 intentProfile.putExtra("user_id", users.get(position).id);
-                v.getContext().startActivity(intentProfile);
+                intentProfile.putExtra("edit", "0");
+                context.startActivity(intentProfile);
             }
         });
     }

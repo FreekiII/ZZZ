@@ -1,15 +1,20 @@
 package com.example.justbootupffs;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
@@ -21,10 +26,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.example.justbootupffs.Entity.User;
+import com.example.justbootupffs.Service.UserService;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -41,14 +48,17 @@ import static com.example.justbootupffs.LoginActivity.DATABASE_URL;
 import static com.example.justbootupffs.LoginActivity.USER_DATABASE;
 
 public class ProfileActivity extends AppCompatActivity {
-    private EditText textUsername, textPassword, textDescription;
+    private EditText textName, textSurname, textPassword, textDescription;
+    private TextView textViewName, textViewSurname, textViewAge, textViewDescription;
+    private CheckBox checkBoxAdmin, checkBoxTeacher, checkBoxStudent, checkBoxMentor;
     private ImageView imageView;
     private Button buttonSave, buttonChoose;
     private DatabaseReference userReference;
     private StorageReference storageRef;
     private Uri imageUri;
-    private User selectedUser;
+    private UserService selectedUser, currentUser;
     private ActivityResultLauncher<Intent> mGetContent;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,56 +72,94 @@ public class ProfileActivity extends AppCompatActivity {
         super.onStart();
         Intent intentStart = getIntent();
         String id = intentStart.getStringExtra("user_id");
+        String edit = intentStart.getStringExtra("edit");
         userReference = FirebaseDatabase.getInstance(DATABASE_URL)
                 .getReference(USER_DATABASE + "/" + id);
-        userReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-            @Override
-            public void onComplete(@NotNull Task<DataSnapshot> task) {
-                if (task.isSuccessful()) {
-                    selectedUser = task.getResult().getValue(User.class);
-                    textUsername.setText(selectedUser.username);
-                    textPassword.setText(selectedUser.password);
-                    textDescription.setText(selectedUser.description);
-                    if (imageUri == null) {
-                        if (!TextUtils.isEmpty(selectedUser.profilePicture)) {
-                            Glide.with(ProfileActivity.this).load(selectedUser.profilePicture).into(imageView);
+        if (selectedUser == null) {
+            userReference.get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                @Override
+                public void onComplete(@NotNull Task<DataSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        selectedUser = new UserService(task.getResult().getValue(User.class));
+                        if (TextUtils.equals(edit, "1") || currentUser.isAdmin()) {
+                            textSurname.setVisibility(View.VISIBLE);
+                            textDescription.setVisibility(View.VISIBLE);
+                            textName.setVisibility(View.VISIBLE);
+                            textPassword.setVisibility(View.VISIBLE);
+                            buttonSave.setVisibility(View.VISIBLE);
+                            buttonChoose.setVisibility(View.VISIBLE);
+                            textName.setText(selectedUser.getName());
+                            textSurname.setText(selectedUser.getSurname());
+                            textPassword.setText(selectedUser.getPassword());
+                            if (currentUser.isAdmin()) {
+                                checkBoxAdmin.setChecked(selectedUser.isAdmin());
+                                checkBoxMentor.setChecked(selectedUser.isMentor());
+                                checkBoxStudent.setChecked(selectedUser.isStudent());
+                                checkBoxTeacher.setChecked(selectedUser.isTeacher());
+                            } else {
+                                checkBoxTeacher.setVisibility(View.GONE);
+                                checkBoxStudent.setVisibility(View.GONE);
+                                checkBoxMentor.setVisibility(View.GONE);
+                                checkBoxAdmin.setVisibility(View.GONE);
+                            }
+                            textDescription.setText(selectedUser.getDescription());
                         } else {
-                            Glide.with(ProfileActivity.this).load("https://firebasestorage.googleapis.com/v0/b/justbootupffs.appspot.com/o/Image%2F0Nk3Jxv.png?alt=media&token=3af1c410-08c8-4562-841b-2ed246fbe332").into(imageView);
+                            textViewAge.setVisibility(View.VISIBLE);
+                            textViewDescription.setVisibility(View.VISIBLE);
+                            textViewName.setVisibility(View.VISIBLE);
+                            textViewSurname.setVisibility(View.VISIBLE);
+                            checkBoxAdmin.setVisibility(View.GONE);
+                            checkBoxMentor.setVisibility(View.GONE);
+                            checkBoxStudent.setVisibility(View.GONE);
+                            checkBoxTeacher.setVisibility(View.GONE);
+                            textViewName.setText(selectedUser.getName());
+                            textViewSurname.setText(selectedUser.getSurname());
+                            textViewDescription.setText(selectedUser.getDescription());
+                            textViewAge.setText(selectedUser.getAge());
+                        }
+                        if (imageUri == null) {
+                            if (!TextUtils.isEmpty(selectedUser.getProfilePicture())) {
+                                Glide.with(ProfileActivity.this).load(selectedUser.getProfilePicture()).into(imageView);
+                            } else {
+                                Glide.with(ProfileActivity.this).load("https://firebasestorage.googleapis.com/v0/b/justbootupffs.appspot.com/o/NqtXx65.png?alt=media&token=73711395-bd5d-413a-85a8-310e32e97ebd").into(imageView);
+                            }
                         }
                     }
                 }
-            }
-        });
-//        userReference.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                selectedUser = dataSnapshot.getValue(User.class);
-//                textUsername.setText(selectedUser.username);
-//                textPassword.setText(selectedUser.password);
-//                textDescription.setText(selectedUser.description);
-//                if (selectedUser.profilePicture != null && selectedUser.profilePicture != "") {
-//                    Glide.with(ProfileActivity.this).load(selectedUser.profilePicture).into(imageView);
-//                } else {
-//                    Glide.with(ProfileActivity.this).load("https://firebasestorage.googleapis.com/v0/b/justbootupffs.appspot.com/o/Image%2F0Nk3Jxv.png?alt=media&token=3af1c410-08c8-4562-841b-2ed246fbe332").into(imageView);
-//                }
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError error) {
-//                Toast.makeText(ProfileActivity.this, "DB error profile",
-//                        Toast.LENGTH_LONG).show();
-//            }
-//        });
+            });
+        }
     }
 
     private void init() {
-        textUsername = findViewById(R.id.editTextUsernameProfile);
+        textName = findViewById(R.id.editTextNameProfile);
+        textSurname = findViewById(R.id.editTextSurnameProfile);
         textPassword = findViewById(R.id.editTextPasswordProfile);
         textDescription = findViewById(R.id.editTextDescriptionProfile);
+        textViewName = findViewById(R.id.textViewNameProfile);
+        textViewSurname = findViewById(R.id.textViewSurnameProfile);
+        textViewAge = findViewById(R.id.textViewAgeProfile);
+        textViewDescription = findViewById(R.id.textViewDescriptionProfile);
+        checkBoxAdmin = findViewById(R.id.checkBoxAdmin);
+        checkBoxMentor = findViewById(R.id.checkBoxMentor);
+        checkBoxStudent = findViewById(R.id.checkBoxStudent);
+        checkBoxTeacher = findViewById(R.id.checkBoxTeacher);
         buttonSave = findViewById(R.id.buttonSaveProfile);
         buttonChoose =findViewById(R.id.buttonChangeImage);
         imageView = findViewById(R.id.imageViewProfile);
         storageRef = FirebaseStorage.getInstance().getReference("Image");
+        FirebaseDatabase.getInstance(DATABASE_URL)
+                .getReference(USER_DATABASE + "/" + FirebaseAuth.getInstance().getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull @NotNull Task<DataSnapshot> task) {
+                        currentUser = new UserService(task.getResult().getValue(User.class));
+                    }
+                });
+        progressDialog = new ProgressDialog(ProfileActivity.this);
+        progressDialog.setMessage("Загрузка...");
+        progressDialog.setCancelable(false);
+        progressDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.RED));
+        progressDialog.setProgress(0);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
         mGetContent = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
@@ -133,7 +181,7 @@ public class ProfileActivity extends AppCompatActivity {
         Bitmap bitmap = ((BitmapDrawable) imageView.getDrawable()).getBitmap();
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-        StorageReference fileRef = storageRef.child(UUID.randomUUID().toString() + selectedUser.id);
+        StorageReference fileRef = storageRef.child(UUID.randomUUID().toString() + selectedUser.getId());
         UploadTask uploadTask = fileRef.putBytes(out.toByteArray());
         uploadTask.addOnCompleteListener(new OnCompleteListener<UploadTask.TaskSnapshot>() {
             @Override
@@ -142,12 +190,26 @@ public class ProfileActivity extends AppCompatActivity {
                     fileRef.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
-                            selectedUser.profilePicture = uri.toString();
-                            userReference.setValue(selectedUser);
+                            selectedUser.setProfilePicture(uri.toString());
+                            userReference.setValue(selectedUser.getUser()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void unused) {
+                                    selectedUser = null;
+                                    progressDialog.dismiss();
+                                    Intent intentUpdate = new Intent(ProfileActivity.this, MainActivity.class);
+                                    startActivity(intentUpdate);
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(Exception e) {
+                                    Toast.makeText(ProfileActivity.this, "Update user failure",
+                                            Toast.LENGTH_SHORT).show();
+                                }
+                            });
                         }
                     }).addOnFailureListener(new OnFailureListener() {
                         @Override
-                        public void onFailure(@NonNull Exception exception) {
+                        public void onFailure(Exception exception) {
                             Toast.makeText(ProfileActivity.this, "Download link was not retrieved",
                                     Toast.LENGTH_SHORT).show();
                         }
@@ -161,15 +223,57 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void onClickSaveProfile(View view) {
-        selectedUser.username = textUsername.getText().toString();
-        selectedUser.password = textPassword.getText().toString();
-        selectedUser.description = textDescription.getText().toString();
+        selectedUser.setName(textName.getText().toString());
+        selectedUser.setSurname(textSurname.getText().toString());
+        selectedUser.setPassword(textPassword.getText().toString());
+        selectedUser.setDescription(textDescription.getText().toString());
+        if (checkBoxTeacher.isChecked()) {
+            selectedUser.setPrivilegesTeacher();
+        } else {
+            selectedUser.removePrivilegesTeacher();
+        }
+        if (checkBoxStudent.isChecked()) {
+            selectedUser.setPrivilegesStudent();
+        } else {
+            selectedUser.removePrivilegesStudent();
+        }
+        if (checkBoxMentor.isChecked()) {
+            selectedUser.setPrivilegesMentor();
+        } else {
+            selectedUser.removePrivilegesMentor();
+        }
+        if (checkBoxAdmin.isChecked()) {
+            selectedUser.setPrivilegesAdmin();
+        } else {
+            selectedUser.removePrivilegesAdmin();
+        }
+        progressDialog.show();
         if (imageUri != null && imageUri.toString() != "") {
             uploadImage();
+        } else {
+            userReference.setValue(selectedUser.getUser()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                @Override
+                public void onSuccess(Void unused) {
+                    selectedUser = null;
+                    progressDialog.dismiss();
+                    Intent intentUpdate = new Intent(ProfileActivity.this, MainActivity.class);
+                    startActivity(intentUpdate);
+                }
+            }).addOnFailureListener(new OnFailureListener() {
+                @Override
+                public void onFailure(Exception e) {
+                    Toast.makeText(ProfileActivity.this, "Update user failure",
+                            Toast.LENGTH_SHORT).show();
+                }
+            });
         }
     }
 
     public void onClickChooseImage(View view) {
+        selectedUser.setName(textName.getText().toString());
+        selectedUser.setSurname(textSurname.getText().toString());
+        selectedUser.setPassword(textPassword.getText().toString());
+        selectedUser.setDescription(textDescription.getText().toString());
         Intent intentChoose = new Intent(Intent.ACTION_GET_CONTENT);
         intentChoose.setType("image/*");
         mGetContent.launch(intentChoose);
