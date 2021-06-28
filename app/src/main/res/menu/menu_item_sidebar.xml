@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item android:id="@+id/item_1"
+            android:title="Редактировать профиль"
+            android:icon="@drawable/ic_pen"/>
+        <item android:id="@+id/item_2"
+            android:title="Расписание"
+            android:icon="@drawable/ic_pen"/>
+        <item android:id="@+id/item_3"
+            android:title="Материалы курса"
+            android:icon="@drawable/ic_pen"/>
+        <item android:id="@+id/item_4"
+            android:title="Команды на хакатон"
+            android:icon="@drawable/ic_pen"/>
+    </group>
+
+    <item android:title="Помощь">
+        <menu>
+            <group android:checkableBehavior="single">
+                <item android:id="@+id/item_5"
+                    android:title="Как пользоваться"
+                    android:icon="@drawable/ic_pen"/>
+                <item android:id="@+id/item_6"
+                    android:title="Сообщить о проблеме"
+                    android:icon="@drawable/ic_pen"/>
+            </group>
+        </menu>
+    </item>
+</menu>

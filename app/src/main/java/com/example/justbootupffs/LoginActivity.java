@@ -2,6 +2,7 @@ package com.example.justbootupffs;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -11,6 +12,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -37,6 +39,7 @@ public class LoginActivity extends AppCompatActivity {
     private Button buttonSignIn, buttonRegister, buttonConfirm, buttonCancel;
     private FirebaseAuth mAuth;
     private DatabaseReference databaseReference;
+    private Toolbar toolbar;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,6 +68,8 @@ public class LoginActivity extends AppCompatActivity {
         buttonRegister = findViewById(R.id.buttonRegister);
         buttonConfirm = findViewById(R.id.buttonConfirm);
         buttonCancel = findViewById(R.id.buttonCancel);
+        toolbar = findViewById(R.id.toolbarLogin);
+        setSupportActionBar(toolbar);
 
         mAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance(DATABASE_URL).getReference(USER_DATABASE);
@@ -82,9 +87,15 @@ public class LoginActivity extends AppCompatActivity {
         textEmail = (EditText)constraintLayout.getViewById(R.id.editTextEmail);
         textPassword = (EditText)constraintLayout.getViewById(R.id.editTextPassword);
         String email = textEmail.getText().toString();
-        //TODO Validation of email
+        if (TextUtils.isEmpty(email)) {
+            textEmail.setError("Пожалуйста введите емайл");
+            return;
+        }
         String password = textPassword.getText().toString();
-        //TODO Validation of password
+        if (TextUtils.isEmpty(password)) {
+            textPassword.setError("Пожалуйста введите пароль");
+            return;
+        }
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -101,9 +112,8 @@ public class LoginActivity extends AppCompatActivity {
 //                                        Toast.LENGTH_SHORT).show();
 //                            }
                         } else {
-                            Toast.makeText(LoginActivity.this, "Authentication failed :<",
+                            Toast.makeText(LoginActivity.this, "Введены неверные данные",
                                     Toast.LENGTH_SHORT).show();
-                            // TODO updateUI(null);
                         }
                     }
                 });
@@ -173,6 +183,7 @@ public class LoginActivity extends AppCompatActivity {
         buttonSignIn.setVisibility(View.VISIBLE);
         buttonConfirm.setVisibility(View.GONE);
         buttonCancel.setVisibility(View.GONE);
+
     }
 
     public void sendEmailVerification() {

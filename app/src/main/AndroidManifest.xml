@@ -11,17 +11,21 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.JustBootUpFFS">
-        <activity android:name=".ProfileActivity"></activity>
-        <activity android:name=".ListActivity" />
-        <activity android:name=".LoginActivity">
+        android:theme="@style/Theme.MainTheme">
+        <activity android:name=".ProfileActivity"
+            android:label="Профиль"/>
+        <activity android:name=".ListActivity"
+            android:label="Список"/>
+        <activity android:name=".LoginActivity"
+            android:label="Авторизация">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity" />
+        <activity android:name=".MainActivity"
+            android:label="Личный кабинет"/>
     </application>
 
 </manifest>

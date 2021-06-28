@@ -1,19 +1,27 @@
 package com.example.justbootupffs;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+
 import com.bumptech.glide.Glide;
 import com.example.justbootupffs.Entity.User;
 import com.example.justbootupffs.Service.UserService;
+import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -22,23 +30,50 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import org.jetbrains.annotations.NotNull;
+
 import static com.example.justbootupffs.LoginActivity.DATABASE_URL;
 import static com.example.justbootupffs.LoginActivity.USER_DATABASE;
 
 public class MainActivity extends AppCompatActivity {
-    private TextView textViewAge, textViewName, textViewSurname;
+    private TextView textViewAge, textViewName, textViewNameSidebar, textViewDescription;
     private Button buttonLogout, buttonList, buttonListTeacher, buttonListStudent, buttonListMentor;
-    private ImageView imageView;
+    private ImageView imageView, imageViewSidebar;
     private FirebaseUser user;
     private FirebaseAuth mAuth;
     private DatabaseReference userReference;
     private UserService currentUser;
+    private DrawerLayout drawerLayout;
+    private NavigationView navigationView;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         init();
+        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+                switch (item.getItemId()) {
+                    case R.id.item_1:
+                        Toast.makeText(MainActivity.this, "1", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.item_2:
+                        Toast.makeText(MainActivity.this, "2", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.item_3:
+                        Toast.makeText(MainActivity.this, "3", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.item_4:
+                        Toast.makeText(MainActivity.this, "4", Toast.LENGTH_SHORT).show();
+                        break;
+                    default:
+                        return false;
+                }
+                return true;
+            }
+        });
     }
 
     @Override
@@ -48,9 +83,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 currentUser = new UserService(dataSnapshot.getValue(User.class));
-                textViewName.setText(currentUser.getName());
-                textViewSurname.setText(currentUser.getSurname());
+                textViewName.setText(currentUser.getName() + " " + currentUser.getSurname());
                 textViewAge.setText("Возраст: " + currentUser.getAge());
+                textViewDescription.setText(currentUser.getDescription());
                 if (currentUser.isAdmin()) {
                     buttonList.setVisibility(View.VISIBLE);
                 }
@@ -79,8 +114,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void init() {
         textViewName = findViewById(R.id.textViewName);
-        textViewSurname = findViewById(R.id.textViewSurname);
         textViewAge = findViewById(R.id.textViewAge);
+        textViewDescription = findViewById(R.id.textViewDescription);
         buttonLogout = findViewById(R.id.buttonLogout);
         buttonList = findViewById(R.id.buttonList);
         buttonListStudent = findViewById(R.id.buttonListStudent);
@@ -91,6 +126,49 @@ public class MainActivity extends AppCompatActivity {
         user = mAuth.getCurrentUser();
         userReference = FirebaseDatabase.getInstance(DATABASE_URL)
                 .getReference(USER_DATABASE + "/" + user.getUid());
+        navigationView = findViewById(R.id.navViewSidebar);
+        toolbar = findViewById(R.id.toolbarSidebar);
+        drawerLayout = findViewById(R.id.drawerLayoutSidebar);
+        setSupportActionBar(toolbar);
+        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
+        drawerLayout.addDrawerListener(toggle);
+        drawerLayout.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(@NonNull @NotNull View drawerView, float slideOffset) {
+                textViewNameSidebar = findViewById(R.id.textViewNameSidebar);
+                textViewNameSidebar.setText(currentUser.getName() + " " + currentUser.getSurname());
+                imageViewSidebar = findViewById(R.id.imageViewSidebar);
+                if (!TextUtils.isEmpty(currentUser.getProfilePicture())) {
+                    Glide.with(MainActivity.this).load(currentUser.getProfilePicture()).into(imageViewSidebar);
+                } else {
+                    Glide.with(MainActivity.this).load("https://firebasestorage.googleapis.com/v0/b/justbootupffs.appspot.com/o/MXJXIJF.png?alt=media&token=1d26ea72-b6d5-4b82-a7b5-d0d41139e3b5").into(imageViewSidebar);
+                }
+            }
+
+            @Override
+            public void onDrawerOpened(@NonNull @NotNull View drawerView) {
+                textViewNameSidebar = findViewById(R.id.textViewNameSidebar);
+                textViewNameSidebar.setText(currentUser.getName() + " " + currentUser.getSurname());
+                imageViewSidebar = findViewById(R.id.imageViewSidebar);
+                if (!TextUtils.isEmpty(currentUser.getProfilePicture())) {
+                    Glide.with(MainActivity.this).load(currentUser.getProfilePicture()).into(imageViewSidebar);
+                } else {
+                    Glide.with(MainActivity.this).load("https://firebasestorage.googleapis.com/v0/b/justbootupffs.appspot.com/o/MXJXIJF.png?alt=media&token=1d26ea72-b6d5-4b82-a7b5-d0d41139e3b5").into(imageViewSidebar);
+                }
+            }
+
+            @Override
+            public void onDrawerClosed(@NonNull @NotNull View drawerView) {
+                return;
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+                return;
+            }
+        });
+        toggle.syncState();
+        navigationView.bringToFront();
     }
 
     //TODO Shift this button to menu
@@ -130,5 +208,18 @@ public class MainActivity extends AppCompatActivity {
         Intent intentList = new Intent(MainActivity.this, ListActivity.class);
         intentList.putExtra("filter", "student");
         startActivity(intentList);
+    }
+
+    public void onClickSidebarBack(View view) {
+        drawerLayout.closeDrawer(GravityCompat.START);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
     }
 }

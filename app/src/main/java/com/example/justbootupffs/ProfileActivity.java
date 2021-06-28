@@ -23,6 +23,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
 import com.example.justbootupffs.Entity.User;
@@ -32,6 +33,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -55,10 +57,12 @@ public class ProfileActivity extends AppCompatActivity {
     private Button buttonSave, buttonChoose;
     private DatabaseReference userReference;
     private StorageReference storageRef;
+    private FirebaseUser user;
     private Uri imageUri;
     private UserService selectedUser, currentUser;
     private ActivityResultLauncher<Intent> mGetContent;
     private ProgressDialog progressDialog;
+    private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,12 +89,14 @@ public class ProfileActivity extends AppCompatActivity {
                             textSurname.setVisibility(View.VISIBLE);
                             textDescription.setVisibility(View.VISIBLE);
                             textName.setVisibility(View.VISIBLE);
-                            textPassword.setVisibility(View.VISIBLE);
+                            if (TextUtils.equals(edit, "1") || selectedUser.getId() == currentUser.getId()) {
+                                textPassword.setVisibility(View.VISIBLE);
+                                textPassword.setText(selectedUser.getPassword());
+                            }
                             buttonSave.setVisibility(View.VISIBLE);
                             buttonChoose.setVisibility(View.VISIBLE);
                             textName.setText(selectedUser.getName());
                             textSurname.setText(selectedUser.getSurname());
-                            textPassword.setText(selectedUser.getPassword());
                             if (currentUser.isAdmin()) {
                                 checkBoxAdmin.setChecked(selectedUser.isAdmin());
                                 checkBoxMentor.setChecked(selectedUser.isMentor());
@@ -144,16 +150,19 @@ public class ProfileActivity extends AppCompatActivity {
         checkBoxStudent = findViewById(R.id.checkBoxStudent);
         checkBoxTeacher = findViewById(R.id.checkBoxTeacher);
         buttonSave = findViewById(R.id.buttonSaveProfile);
-        buttonChoose =findViewById(R.id.buttonChangeImage);
+        buttonChoose = findViewById(R.id.buttonChangeImage);
         imageView = findViewById(R.id.imageViewProfile);
+        toolbar = findViewById(R.id.toolbarProfile);
+        setSupportActionBar(toolbar);
+        user = FirebaseAuth.getInstance().getCurrentUser();
         storageRef = FirebaseStorage.getInstance().getReference("Image");
         FirebaseDatabase.getInstance(DATABASE_URL)
                 .getReference(USER_DATABASE + "/" + FirebaseAuth.getInstance().getCurrentUser().getUid()).get().addOnCompleteListener(new OnCompleteListener<DataSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull @NotNull Task<DataSnapshot> task) {
-                        currentUser = new UserService(task.getResult().getValue(User.class));
-                    }
-                });
+            @Override
+            public void onComplete(@NonNull @NotNull Task<DataSnapshot> task) {
+                currentUser = new UserService(task.getResult().getValue(User.class));
+            }
+        });
         progressDialog = new ProgressDialog(ProfileActivity.this);
         progressDialog.setMessage("Загрузка...");
         progressDialog.setCancelable(false);
@@ -191,19 +200,32 @@ public class ProfileActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(Uri uri) {
                             selectedUser.setProfilePicture(uri.toString());
-                            userReference.setValue(selectedUser.getUser()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            user.updatePassword(selectedUser.getPassword()).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void unused) {
-                                    selectedUser = null;
-                                    progressDialog.dismiss();
-                                    Intent intentUpdate = new Intent(ProfileActivity.this, MainActivity.class);
-                                    startActivity(intentUpdate);
+                                    userReference.setValue(selectedUser.getUser()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void unused) {
+                                            selectedUser = null;
+                                            progressDialog.dismiss();
+                                            Intent intentUpdate = new Intent(ProfileActivity.this, MainActivity.class);
+                                            startActivity(intentUpdate);
+                                        }
+                                    }).addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(Exception e) {
+                                            Toast.makeText(ProfileActivity.this, "Update user failure",
+                                                    Toast.LENGTH_SHORT).show();
+                                            progressDialog.dismiss();
+                                        }
+                                    });
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(Exception e) {
-                                    Toast.makeText(ProfileActivity.this, "Update user failure",
+                                    Toast.makeText(ProfileActivity.this, "Password update failed, please reauthenticate",
                                             Toast.LENGTH_SHORT).show();
+                                    progressDialog.dismiss();
                                 }
                             });
                         }
@@ -212,58 +234,100 @@ public class ProfileActivity extends AppCompatActivity {
                         public void onFailure(Exception exception) {
                             Toast.makeText(ProfileActivity.this, "Download link was not retrieved",
                                     Toast.LENGTH_SHORT).show();
+
+                            progressDialog.dismiss();
                         }
                     });
                 } else {
                     Toast.makeText(ProfileActivity.this, "Upload failure",
                             Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
                 }
             }
         });
     }
 
     public void onClickSaveProfile(View view) {
-        selectedUser.setName(textName.getText().toString());
-        selectedUser.setSurname(textSurname.getText().toString());
-        selectedUser.setPassword(textPassword.getText().toString());
-        selectedUser.setDescription(textDescription.getText().toString());
-        if (checkBoxTeacher.isChecked()) {
-            selectedUser.setPrivilegesTeacher();
+        String name = textName.getText().toString();
+        if (TextUtils.isEmpty(name) || name.length() > 15) {
+            textName.setError("Пожалуйста введите корректное имя");
+            return;
         } else {
-            selectedUser.removePrivilegesTeacher();
+            selectedUser.setName(name);
         }
-        if (checkBoxStudent.isChecked()) {
-            selectedUser.setPrivilegesStudent();
+        String surname = textSurname.getText().toString();
+        if (TextUtils.isEmpty(surname) || surname.length() > 20) {
+            textSurname.setError("Пожалуйста введите корректную фамилию");
+            return;
         } else {
-            selectedUser.removePrivilegesStudent();
+            selectedUser.setSurname(surname);
         }
-        if (checkBoxMentor.isChecked()) {
-            selectedUser.setPrivilegesMentor();
+        String password = textPassword.getText().toString();
+        if (password.length() > 50 || password.length() < 6) {
+            textPassword.setError("Пожалуйста введите корректный пароль");
+            return;
         } else {
-            selectedUser.removePrivilegesMentor();
+            selectedUser.setPassword(password);
         }
-        if (checkBoxAdmin.isChecked()) {
-            selectedUser.setPrivilegesAdmin();
+        String description = textDescription.getText().toString();
+        if (TextUtils.isEmpty(description) || description.length() > 50) {
+            textDescription.setError("Пожалуйста введите корректное описание");
+            return;
         } else {
-            selectedUser.removePrivilegesAdmin();
+            selectedUser.setDescription(description);
+        }
+        if (currentUser.isAdmin()) {
+            if (checkBoxTeacher.isChecked()) {
+                selectedUser.setPrivilegesTeacher();
+            } else {
+                selectedUser.removePrivilegesTeacher();
+            }
+            if (checkBoxStudent.isChecked()) {
+                selectedUser.setPrivilegesStudent();
+            } else {
+                selectedUser.removePrivilegesStudent();
+            }
+            if (checkBoxMentor.isChecked()) {
+                selectedUser.setPrivilegesMentor();
+            } else {
+                selectedUser.removePrivilegesMentor();
+            }
+            if (checkBoxAdmin.isChecked()) {
+                selectedUser.setPrivilegesAdmin();
+            } else {
+                selectedUser.removePrivilegesAdmin();
+            }
         }
         progressDialog.show();
         if (imageUri != null && imageUri.toString() != "") {
             uploadImage();
         } else {
-            userReference.setValue(selectedUser.getUser()).addOnSuccessListener(new OnSuccessListener<Void>() {
+            user.updatePassword(selectedUser.getPassword()).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void unused) {
-                    selectedUser = null;
-                    progressDialog.dismiss();
-                    Intent intentUpdate = new Intent(ProfileActivity.this, MainActivity.class);
-                    startActivity(intentUpdate);
+                    userReference.setValue(selectedUser.getUser()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void unused) {
+                            selectedUser = null;
+                            progressDialog.dismiss();
+                            Intent intentUpdate = new Intent(ProfileActivity.this, MainActivity.class);
+                            startActivity(intentUpdate);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(Exception e) {
+                            Toast.makeText(ProfileActivity.this, "Update user failure",
+                                    Toast.LENGTH_SHORT).show();
+                            progressDialog.dismiss();
+                        }
+                    });
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(Exception e) {
-                    Toast.makeText(ProfileActivity.this, "Update user failure",
+                    Toast.makeText(ProfileActivity.this, "Password update failed",
                             Toast.LENGTH_SHORT).show();
+                    progressDialog.dismiss();
                 }
             });
         }
