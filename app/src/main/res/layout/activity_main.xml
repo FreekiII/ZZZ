@@ -27,7 +27,7 @@
             android:background="@color/purple_500"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <ImageView
             android:id="@+id/imageViewMain"
@@ -54,17 +54,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewName" />
 
-        <Button
-            android:id="@+id/buttonLogout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:onClick="onClickLogout"
-            android:text="Выйти"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layoutButtonList" />
-
         <TextView
             android:id="@+id/textViewDescription"
             android:layout_width="wrap_content"
@@ -88,25 +77,13 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/textViewDescription" />
 
-        <Button
-            android:id="@+id/buttonProfile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:onClick="onClickProfile"
-            android:text="Профиль"
-            android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textViewAge" />
-
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/layoutButtonList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/buttonProfile">
+            app:layout_constraintTop_toBottomOf="@+id/textViewAge">
 
             <Button
                 android:id="@+id/buttonList"

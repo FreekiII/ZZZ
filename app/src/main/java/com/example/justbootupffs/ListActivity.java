@@ -2,8 +2,11 @@ package com.example.justbootupffs;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -93,5 +96,21 @@ public class ListActivity extends AppCompatActivity {
                 .getReference(USER_DATABASE);
         toolbar = findViewById(R.id.toolbarList);
         setSupportActionBar(toolbar);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_item_toolbar2, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_home:
+                startActivity(new Intent(ListActivity.this, MainActivity.class));
+                break;
+        }
+        return true;
     }
 }

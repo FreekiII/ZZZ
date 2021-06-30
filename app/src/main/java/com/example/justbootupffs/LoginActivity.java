@@ -101,16 +101,16 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onComplete(Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-//                            if (mAuth.getCurrentUser().isEmailVerified()) {
+                            if (mAuth.getCurrentUser().isEmailVerified()) {
                                 Toast.makeText(LoginActivity.this, "Authentication is successful!",
                                         Toast.LENGTH_SHORT).show();
                                 Intent intentAuthorized = new Intent(LoginActivity.this, MainActivity.class);
                                 startActivity(intentAuthorized);
-//                            } else {
-//                                mAuth.signOut();
-//                                Toast.makeText(LoginActivity.this, "Please verify your e-mail",
-//                                        Toast.LENGTH_SHORT).show();
-//                            }
+                            } else {
+                                mAuth.signOut();
+                                Toast.makeText(LoginActivity.this, "Please verify your e-mail",
+                                        Toast.LENGTH_SHORT).show();
+                            }
                         } else {
                             Toast.makeText(LoginActivity.this, "Введены неверные данные",
                                     Toast.LENGTH_SHORT).show();
@@ -137,22 +137,34 @@ public class LoginActivity extends AppCompatActivity {
         String email = textEmail.getText().toString();
         //TODO Validation of email
         String password = textPassword.getText().toString();
-        //TODO Validation of password
+        if (textPassword.getText().length() < 8 || textPassword.getText().length() > 50) {
+            textPassword.setError("Введён некоректный пароль, пожалуйста измените его (длина от 8 до 50 символов).");
+            return;
+        }
         String name = textName.getText().toString();
-        //TODO Validation of name
+        if (TextUtils.isEmpty(name) || name.length() > 15) {
+            textName.setError("Пожалуйста введите корректное имя");
+            return;
+        }
         String surname = textSurname.getText().toString();
-        //TODO Validation of surname
+        if (TextUtils.isEmpty(surname) || surname.length() > 20) {
+            textSurname.setError("Пожалуйста введите корректную фамилию");
+            return;
+        }
         String age = textAge.getText().toString();
-        //TODO Validation of age
+        if (TextUtils.isEmpty(age) || age.length() > 3 || !TextUtils.isDigitsOnly(age)) {
+            textAge.setError("Пожалуйста введите корректный возраст");
+            return;
+        }
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            Toast.makeText(view.getContext(), "You have successfully registered",
+                            Toast.makeText(view.getContext(), "Вы успешно зарегестрированы!",
                                     Toast.LENGTH_SHORT).show();
 
-//                            sendEmailVerification();
+                            sendEmailVerification();
 
                             String uid = mAuth.getCurrentUser().getUid();
                             databaseReference.child(uid).setValue(new User(uid, name, surname, age, email, password)).addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -163,15 +175,14 @@ public class LoginActivity extends AppCompatActivity {
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
-                                public void onFailure(@NonNull @NotNull Exception e) {
+                                public void onFailure(@NonNull Exception e) {
                                     Toast.makeText(view.getContext(), "User save failed",
                                             Toast.LENGTH_SHORT).show();
                                 }
                             });
                         } else {
-                            Toast.makeText(view.getContext(), "Registration failed",
+                            Toast.makeText(view.getContext(), "Регистрация провалена, пожалуйста проверьте введённые данные.",
                                     Toast.LENGTH_SHORT).show();
-                            //TODO updateUI(null);
                         }
                     }
                 });
@@ -183,15 +194,14 @@ public class LoginActivity extends AppCompatActivity {
         buttonSignIn.setVisibility(View.VISIBLE);
         buttonConfirm.setVisibility(View.GONE);
         buttonCancel.setVisibility(View.GONE);
-
     }
 
     public void sendEmailVerification() {
         mAuth.getCurrentUser().sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
             @Override
-            public void onComplete(@NonNull @NotNull Task<Void> task) {
+            public void onComplete(@NonNull Task<Void> task) {
                 if (task.isSuccessful()) {
-                    Toast.makeText(LoginActivity.this, "Confirm your e-mail",
+                    Toast.makeText(LoginActivity.this, "Подтвердите вашу почту.",
                             Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(LoginActivity.this, "Mail confirmation failed",

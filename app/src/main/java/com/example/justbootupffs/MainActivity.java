@@ -1,12 +1,14 @@
 package com.example.justbootupffs;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -37,7 +39,7 @@ import static com.example.justbootupffs.LoginActivity.USER_DATABASE;
 
 public class MainActivity extends AppCompatActivity {
     private TextView textViewAge, textViewName, textViewNameSidebar, textViewDescription;
-    private Button buttonLogout, buttonList, buttonListTeacher, buttonListStudent, buttonListMentor;
+    private Button buttonList, buttonListTeacher, buttonListStudent, buttonListMentor;
     private ImageView imageView, imageViewSidebar;
     private FirebaseUser user;
     private FirebaseAuth mAuth;
@@ -46,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
     private DrawerLayout drawerLayout;
     private NavigationView navigationView;
     private Toolbar toolbar;
+    private Dialog dialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +60,10 @@ public class MainActivity extends AppCompatActivity {
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 switch (item.getItemId()) {
                     case R.id.item_1:
-                        Toast.makeText(MainActivity.this, "1", Toast.LENGTH_SHORT).show();
+                        Intent intentProfile = new Intent(MainActivity.this, ProfileActivity.class);
+                        intentProfile.putExtra("user_id", currentUser.getId());
+                        intentProfile.putExtra("edit", "1");
+                        startActivity(intentProfile);
                         break;
                     case R.id.item_2:
                         Toast.makeText(MainActivity.this, "2", Toast.LENGTH_SHORT).show();
@@ -67,6 +73,12 @@ public class MainActivity extends AppCompatActivity {
                         break;
                     case R.id.item_4:
                         Toast.makeText(MainActivity.this, "4", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.item_5:
+                        Toast.makeText(MainActivity.this, "5", Toast.LENGTH_SHORT).show();
+                        break;
+                    case R.id.item_6:
+                        Toast.makeText(MainActivity.this, "6", Toast.LENGTH_SHORT).show();
                         break;
                     default:
                         return false;
@@ -116,7 +128,6 @@ public class MainActivity extends AppCompatActivity {
         textViewName = findViewById(R.id.textViewName);
         textViewAge = findViewById(R.id.textViewAge);
         textViewDescription = findViewById(R.id.textViewDescription);
-        buttonLogout = findViewById(R.id.buttonLogout);
         buttonList = findViewById(R.id.buttonList);
         buttonListStudent = findViewById(R.id.buttonListStudent);
         buttonListTeacher = findViewById(R.id.buttonListTeacher);
@@ -169,21 +180,29 @@ public class MainActivity extends AppCompatActivity {
         });
         toggle.syncState();
         navigationView.bringToFront();
-    }
-
-    //TODO Shift this button to menu
-    public void onClickLogout(View view) {
-        mAuth.signOut();
-        Intent intentLogout = new Intent(this, LoginActivity.class);
-        startActivity(intentLogout);
-        Toast.makeText(this, "You logged out!", Toast.LENGTH_SHORT).show();
-    }
-
-    public void onClickProfile(View view) {
-        Intent intentProfile = new Intent(this, ProfileActivity.class);
-        intentProfile.putExtra("user_id", currentUser.getId());
-        intentProfile.putExtra("edit", "1");
-        startActivity(intentProfile);
+        dialog = new Dialog(MainActivity.this);
+        dialog.setContentView(R.layout.dialog_logout);
+        dialog.getWindow().setBackgroundDrawable(getDrawable(R.drawable.dialog_background));
+        dialog.getWindow().setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.setCancelable(true);
+        Button agree = dialog.findViewById(R.id.buttonDialogAgree);
+        Button cancel = dialog.findViewById(R.id.buttonDialogCancel);
+        agree.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mAuth.signOut();
+                dialog.dismiss();
+                Intent intentLogout = new Intent(MainActivity.this, LoginActivity.class);
+                startActivity(intentLogout);
+                Toast.makeText(MainActivity.this, "You logged out!", Toast.LENGTH_SHORT).show();
+            }
+        });
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.dismiss();
+            }
+        });
     }
 
     public void onClickList(View view) {
@@ -221,5 +240,21 @@ public class MainActivity extends AppCompatActivity {
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_item_toolbar, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_logout:
+                dialog.show();
+                break;
+        }
+        return true;
     }
 }

@@ -2,9 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.justbootupffs">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -12,11 +13,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MainTheme">
-        <activity android:name=".ProfileActivity"
-            android:label="Профиль"/>
-        <activity android:name=".ListActivity"
-            android:label="Список"/>
-        <activity android:name=".LoginActivity"
+        <activity android:name=".ChangeEmailActivity"
+            android:label="Смена почты"/>
+        <activity android:name=".ChangePasswordActivity"
+            android:label="Смена пароля"/>
+        <activity
+            android:name=".ProfileActivity"
+            android:label="Профиль" />
+        <activity
+            android:name=".ListActivity"
+            android:label="Список" />
+        <activity
+            android:name=".LoginActivity"
             android:label="Авторизация">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -24,8 +32,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".MainActivity"
-            android:label="Личный кабинет"/>
+        <activity
+            android:name=".MainActivity"
+            android:label="Личный кабинет" />
     </application>
 
 </manifest>

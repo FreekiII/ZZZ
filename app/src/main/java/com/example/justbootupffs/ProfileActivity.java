@@ -9,6 +9,8 @@ import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -50,11 +52,11 @@ import static com.example.justbootupffs.LoginActivity.DATABASE_URL;
 import static com.example.justbootupffs.LoginActivity.USER_DATABASE;
 
 public class ProfileActivity extends AppCompatActivity {
-    private EditText textName, textSurname, textPassword, textDescription;
+    private EditText textName, textSurname, textAge, textDescription;
     private TextView textViewName, textViewSurname, textViewAge, textViewDescription;
     private CheckBox checkBoxAdmin, checkBoxTeacher, checkBoxStudent, checkBoxMentor;
     private ImageView imageView;
-    private Button buttonSave, buttonChoose;
+    private Button buttonSave, buttonChoose, buttonChangePassword, buttonChangeEmail;
     private DatabaseReference userReference;
     private StorageReference storageRef;
     private FirebaseUser user;
@@ -89,12 +91,14 @@ public class ProfileActivity extends AppCompatActivity {
                             textSurname.setVisibility(View.VISIBLE);
                             textDescription.setVisibility(View.VISIBLE);
                             textName.setVisibility(View.VISIBLE);
-                            if (TextUtils.equals(edit, "1") || selectedUser.getId() == currentUser.getId()) {
-                                textPassword.setVisibility(View.VISIBLE);
-                                textPassword.setText(selectedUser.getPassword());
-                            }
+                            textAge.setVisibility(View.VISIBLE);
+                            textAge.setText(selectedUser.getAge());
                             buttonSave.setVisibility(View.VISIBLE);
                             buttonChoose.setVisibility(View.VISIBLE);
+                            if (selectedUser.getId() == currentUser.getId()) {
+                                buttonChangeEmail.setVisibility(View.VISIBLE);
+                                buttonChangePassword.setVisibility(View.VISIBLE);
+                            }
                             textName.setText(selectedUser.getName());
                             textSurname.setText(selectedUser.getSurname());
                             if (currentUser.isAdmin()) {
@@ -139,7 +143,7 @@ public class ProfileActivity extends AppCompatActivity {
     private void init() {
         textName = findViewById(R.id.editTextNameProfile);
         textSurname = findViewById(R.id.editTextSurnameProfile);
-        textPassword = findViewById(R.id.editTextPasswordProfile);
+        textAge = findViewById(R.id.editTextAgeProfile);
         textDescription = findViewById(R.id.editTextDescriptionProfile);
         textViewName = findViewById(R.id.textViewNameProfile);
         textViewSurname = findViewById(R.id.textViewSurnameProfile);
@@ -151,6 +155,8 @@ public class ProfileActivity extends AppCompatActivity {
         checkBoxTeacher = findViewById(R.id.checkBoxTeacher);
         buttonSave = findViewById(R.id.buttonSaveProfile);
         buttonChoose = findViewById(R.id.buttonChangeImage);
+        buttonChangeEmail = findViewById(R.id.buttonChangeEmail);
+        buttonChangePassword = findViewById(R.id.buttonChangePassword);
         imageView = findViewById(R.id.imageViewProfile);
         toolbar = findViewById(R.id.toolbarProfile);
         setSupportActionBar(toolbar);
@@ -200,30 +206,18 @@ public class ProfileActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(Uri uri) {
                             selectedUser.setProfilePicture(uri.toString());
-                            user.updatePassword(selectedUser.getPassword()).addOnSuccessListener(new OnSuccessListener<Void>() {
+                            userReference.setValue(selectedUser.getUser()).addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void unused) {
-                                    userReference.setValue(selectedUser.getUser()).addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void unused) {
-                                            selectedUser = null;
-                                            progressDialog.dismiss();
-                                            Intent intentUpdate = new Intent(ProfileActivity.this, MainActivity.class);
-                                            startActivity(intentUpdate);
-                                        }
-                                    }).addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(Exception e) {
-                                            Toast.makeText(ProfileActivity.this, "Update user failure",
-                                                    Toast.LENGTH_SHORT).show();
-                                            progressDialog.dismiss();
-                                        }
-                                    });
+                                    selectedUser = null;
+                                    progressDialog.dismiss();
+                                    Intent intentUpdate = new Intent(ProfileActivity.this, MainActivity.class);
+                                    startActivity(intentUpdate);
                                 }
                             }).addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(Exception e) {
-                                    Toast.makeText(ProfileActivity.this, "Password update failed, please reauthenticate",
+                                    Toast.makeText(ProfileActivity.this, "Update user failure",
                                             Toast.LENGTH_SHORT).show();
                                     progressDialog.dismiss();
                                 }
@@ -262,12 +256,12 @@ public class ProfileActivity extends AppCompatActivity {
         } else {
             selectedUser.setSurname(surname);
         }
-        String password = textPassword.getText().toString();
-        if (password.length() > 50 || password.length() < 6) {
-            textPassword.setError("Пожалуйста введите корректный пароль");
+        String age = textAge.getText().toString();
+        if (TextUtils.isEmpty(age) || age.length() > 3 || !TextUtils.isDigitsOnly(age)) {
+            textAge.setError("Пожалуйста введите корректный возраст");
             return;
         } else {
-            selectedUser.setPassword(password);
+            selectedUser.setAge(age);
         }
         String description = textDescription.getText().toString();
         if (TextUtils.isEmpty(description) || description.length() > 50) {
@@ -302,30 +296,18 @@ public class ProfileActivity extends AppCompatActivity {
         if (imageUri != null && imageUri.toString() != "") {
             uploadImage();
         } else {
-            user.updatePassword(selectedUser.getPassword()).addOnSuccessListener(new OnSuccessListener<Void>() {
+            userReference.setValue(selectedUser.getUser()).addOnSuccessListener(new OnSuccessListener<Void>() {
                 @Override
                 public void onSuccess(Void unused) {
-                    userReference.setValue(selectedUser.getUser()).addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void unused) {
-                            selectedUser = null;
-                            progressDialog.dismiss();
-                            Intent intentUpdate = new Intent(ProfileActivity.this, MainActivity.class);
-                            startActivity(intentUpdate);
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(Exception e) {
-                            Toast.makeText(ProfileActivity.this, "Update user failure",
-                                    Toast.LENGTH_SHORT).show();
-                            progressDialog.dismiss();
-                        }
-                    });
+                    selectedUser = null;
+                    progressDialog.dismiss();
+                    Intent intentUpdate = new Intent(ProfileActivity.this, MainActivity.class);
+                    startActivity(intentUpdate);
                 }
             }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(Exception e) {
-                    Toast.makeText(ProfileActivity.this, "Password update failed",
+                    Toast.makeText(ProfileActivity.this, "Update user failure",
                             Toast.LENGTH_SHORT).show();
                     progressDialog.dismiss();
                 }
@@ -336,10 +318,34 @@ public class ProfileActivity extends AppCompatActivity {
     public void onClickChooseImage(View view) {
         selectedUser.setName(textName.getText().toString());
         selectedUser.setSurname(textSurname.getText().toString());
-        selectedUser.setPassword(textPassword.getText().toString());
+        selectedUser.setAge(textAge.getText().toString());
         selectedUser.setDescription(textDescription.getText().toString());
         Intent intentChoose = new Intent(Intent.ACTION_GET_CONTENT);
         intentChoose.setType("image/*");
         mGetContent.launch(intentChoose);
+    }
+
+    public void onClickChangeEmail(View view) {
+        startActivity(new Intent(this, ChangeEmailActivity.class));
+    }
+
+    public void onClickChangePassword(View view) {
+        startActivity(new Intent(this, ChangePasswordActivity.class));
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_item_toolbar2, menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_home:
+                startActivity(new Intent(ProfileActivity.this, MainActivity.class));
+                break;
+        }
+        return true;
     }
 }

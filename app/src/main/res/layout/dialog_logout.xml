@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:padding="20dp">
+
+    <TextView
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="Вы действительно хотите выйти из вашей учётной записи?"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        android:textAlignment="center"
+        android:id="@+id/textViewDialogLogout"
+        android:paddingBottom="20dp"/>
+
+    <Button
+        android:id="@+id/buttonDialogAgree"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:background="@color/green"
+        android:text="Выйти"
+        app:layout_constraintEnd_toStartOf="@id/buttonDialogCancel"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/textViewDialogLogout" />
+
+    <Button
+        android:id="@+id/buttonDialogCancel"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:background="@color/red"
+        android:text="Отмена"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/buttonDialogAgree"
+        app:layout_constraintTop_toBottomOf="@id/textViewDialogLogout" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

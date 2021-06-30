@@ -25,6 +25,18 @@
         app:layout_constraintTop_toBottomOf="@id/toolbarProfile">
 
         <Button
+            android:id="@+id/buttonSaveProfile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:onClick="onClickSaveProfile"
+            android:text="Сохранить"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/checkBoxStudent" />
+
+        <Button
             android:id="@+id/buttonChangeImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -33,9 +45,32 @@
             android:text="Выбрать изображение"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/buttonSaveProfile" />
+
+        <Button
+            android:id="@+id/buttonChangeEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:onClick="onClickChangeEmail"
+            android:text="Сменить почту"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonChangeImage" />
+
+        <Button
+            android:id="@+id/buttonChangePassword"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:onClick="onClickChangePassword"
+            android:text="Сменить пароль"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/buttonChangeEmail" />
 
         <ImageView
             android:id="@+id/imageViewProfile"
@@ -79,7 +114,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/editTextNameProfile" />
 
             <EditText
-                android:id="@+id/editTextPasswordProfile"
+                android:id="@+id/editTextAgeProfile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -96,7 +131,7 @@
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextPasswordProfile" />
+                app:layout_constraintTop_toBottomOf="@+id/editTextAgeProfile" />
 
             <TextView
                 android:id="@+id/textViewNameProfile"
@@ -146,19 +181,6 @@
                 app:layout_constraintTop_toBottomOf="@+id/textViewAgeProfile" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
-
-        <Button
-            android:id="@+id/buttonSaveProfile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:onClick="onClickSaveProfile"
-            android:text="Сохранить"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.498"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/checkBoxStudent" />
 
         <CheckBox
             android:id="@+id/checkBoxStudent"
