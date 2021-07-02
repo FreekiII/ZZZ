@@ -1,4 +1,4 @@
-package com.example.justbootupffs;
+package com.example.justbootupffs.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.justbootupffs.Entity.User;
+import com.example.justbootupffs.ListRVAdapter;
+import com.example.justbootupffs.R;
 import com.example.justbootupffs.Service.UserService;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -22,8 +24,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-import static com.example.justbootupffs.LoginActivity.DATABASE_URL;
-import static com.example.justbootupffs.LoginActivity.USER_DATABASE;
+import static com.example.justbootupffs.Activity.LoginActivity.DATABASE_URL;
+import static com.example.justbootupffs.Activity.LoginActivity.USER_DATABASE;
 
 public class ListActivity extends AppCompatActivity {
     private RecyclerView recyclerView;

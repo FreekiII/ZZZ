@@ -1,4 +1,4 @@
-package com.example.justbootupffs;
+package com.example.justbootupffs.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -19,6 +19,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.justbootupffs.Entity.User;
+import com.example.justbootupffs.Fragment.LoginFragment;
+import com.example.justbootupffs.R;
+import com.example.justbootupffs.Fragment.RegisterFragment;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -29,11 +32,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import org.jetbrains.annotations.NotNull;
-
 public class LoginActivity extends AppCompatActivity {
     public static final String USER_DATABASE = "User";
     public static final String DATABASE_URL = "https://justbootupffs-default-rtdb.europe-west1.firebasedatabase.app/";
+    public static final String MESSAGE_DATABASE = "Message";
+    public static final String COURSE_DATABASE = "Course";
     private EditText textPassword, textEmail, textName, textSurname, textAge;
     private FrameLayout frameLayout;
     private Button buttonSignIn, buttonRegister, buttonConfirm, buttonCancel;
@@ -70,7 +73,6 @@ public class LoginActivity extends AppCompatActivity {
         buttonCancel = findViewById(R.id.buttonCancel);
         toolbar = findViewById(R.id.toolbarLogin);
         setSupportActionBar(toolbar);
-
         mAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance(DATABASE_URL).getReference(USER_DATABASE);
     }

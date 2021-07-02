@@ -6,11 +6,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.justbootupffs.Activity.ProfileActivity;
 import com.example.justbootupffs.Entity.User;
 
 import org.jetbrains.annotations.NotNull;

@@ -1,4 +1,4 @@
-package com.example.justbootupffs;
+package com.example.justbootupffs.Fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -8,18 +8,19 @@ import android.widget.EditText;
 
 import androidx.fragment.app.Fragment;
 
-public class LoginFragment extends Fragment {
+import com.example.justbootupffs.R;
 
+public class RegisterFragment extends Fragment {
     private View view;
-    private EditText textPassword, textEmail;
+    private EditText textPassword, textEmail, textUsername;
 
-    public LoginFragment() {
+    public RegisterFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        view = inflater.inflate(R.layout.fragment_login, container, false);
+        view = inflater.inflate(R.layout.fragment_register, container, false);
         return view;
     }
 }

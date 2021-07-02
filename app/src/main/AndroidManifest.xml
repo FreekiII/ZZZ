@@ -13,18 +13,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MainTheme">
-        <activity android:name=".ChangeEmailActivity"
+        <activity android:name=".Activity.ChangeEmailActivity"
             android:label="Смена почты"/>
-        <activity android:name=".ChangePasswordActivity"
+        <activity android:name=".Activity.ChangePasswordActivity"
             android:label="Смена пароля"/>
         <activity
-            android:name=".ProfileActivity"
+            android:name=".Activity.ProfileActivity"
             android:label="Профиль" />
         <activity
-            android:name=".ListActivity"
+            android:name=".Activity.ListActivity"
             android:label="Список" />
         <activity
-            android:name=".LoginActivity"
+            android:name=".Activity.LoginActivity"
             android:label="Авторизация">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -33,7 +33,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".MainActivity"
+            android:name=".Activity.MainActivity"
             android:label="Личный кабинет" />
     </application>
 

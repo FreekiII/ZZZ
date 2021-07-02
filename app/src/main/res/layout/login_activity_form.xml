@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -35,29 +36,29 @@
             android:id="@+id/buttonSignIn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="20dp"
             android:layout_marginTop="30dp"
             android:onClick="onClickSignIn"
             android:text="Войти"
             android:visibility="gone"
             app:layout_constraintEnd_toStartOf="@+id/buttonRegister"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/parentFL" />
+            app:layout_constraintTop_toBottomOf="@+id/parentFL"
+            tools:visibility="visible" />
 
         <Button
             android:id="@+id/buttonRegister"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="20dp"
             android:onClick="onClickRegister"
             android:text="Регистрация"
             android:visibility="gone"
+            android:backgroundTint="@color/design_default_color_secondary"
             app:layout_constraintBottom_toBottomOf="@+id/buttonSignIn"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/buttonSignIn"
             app:layout_constraintTop_toTopOf="@+id/buttonSignIn"
-            app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintVertical_bias="1.0"
+            tools:visibility="visible" />
 
         <Button
             android:id="@+id/buttonConfirm"
@@ -80,9 +81,9 @@
             android:onClick="onClickCancel"
             android:text="Отмена"
             android:visibility="gone"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
             app:layout_constraintBottom_toBottomOf="@+id/buttonConfirm"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toEndOf="@+id/buttonConfirm"
             app:layout_constraintTop_toTopOf="@+id/buttonConfirm"
             app:layout_constraintVertical_bias="1.0" />

@@ -1,4 +1,4 @@
-package com.example.justbootupffs;
+package com.example.justbootupffs.Activity;
 
 import android.app.Dialog;
 import android.content.Intent;
@@ -22,6 +22,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.bumptech.glide.Glide;
 import com.example.justbootupffs.Entity.User;
+import com.example.justbootupffs.R;
 import com.example.justbootupffs.Service.UserService;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -34,8 +35,8 @@ import com.google.firebase.database.ValueEventListener;
 
 import org.jetbrains.annotations.NotNull;
 
-import static com.example.justbootupffs.LoginActivity.DATABASE_URL;
-import static com.example.justbootupffs.LoginActivity.USER_DATABASE;
+import static com.example.justbootupffs.Activity.LoginActivity.DATABASE_URL;
+import static com.example.justbootupffs.Activity.LoginActivity.USER_DATABASE;
 
 public class MainActivity extends AppCompatActivity {
     private TextView textViewAge, textViewName, textViewNameSidebar, textViewDescription;

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ProfileActivity">
+    tools:context=".Activity.ProfileActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarProfile"
@@ -15,216 +15,299 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/profileCL"
-        android:padding="20dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_height="0dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbarProfile">
-
-        <Button
-            android:id="@+id/buttonSaveProfile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:onClick="onClickSaveProfile"
-            android:text="Сохранить"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/checkBoxStudent" />
-
-        <Button
-            android:id="@+id/buttonChangeImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:onClick="onClickChooseImage"
-            android:text="Выбрать изображение"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/buttonSaveProfile" />
-
-        <Button
-            android:id="@+id/buttonChangeEmail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:onClick="onClickChangeEmail"
-            android:text="Сменить почту"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/buttonChangeImage" />
-
-        <Button
-            android:id="@+id/buttonChangePassword"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:onClick="onClickChangePassword"
-            android:text="Сменить пароль"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/buttonChangeEmail" />
-
-        <ImageView
-            android:id="@+id/imageViewProfile"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="visible"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHeight_max="200dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintWidth_max="200dp"
-            tools:srcCompat="@tools:sample/avatars"
-            tools:visibility="visible" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbarProfile"
+        app:layout_constraintBottom_toBottomOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/layoutInfoList"
+            android:id="@+id/profileCL"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
+            android:layout_height="match_parent"
+            android:padding="20dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageViewProfile">
+            app:layout_constraintTop_toTopOf="parent">
 
-            <EditText
-                android:id="@+id/editTextNameProfile"
+            <ImageView
+                android:id="@+id/imageViewProfile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHeight_max="200dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintWidth_max="200dp"
+                tools:srcCompat="@tools:sample/avatars"
+                tools:visibility="visible" />
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/layoutInfoList"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="@+id/layoutInfoList" />
+                app:layout_constraintTop_toBottomOf="@+id/imageViewProfile">
 
-            <EditText
-                android:id="@+id/editTextSurnameProfile"
-                android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/textName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Имя: "
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    app:layout_constraintEnd_toStartOf="@+id/editTextNameProfile"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/editTextNameProfile"
+                    app:layout_constraintBottom_toBottomOf="@+id/editTextNameProfile"/>
+
+                <EditText
+                    android:id="@+id/editTextNameProfile"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/textName"
+                    app:layout_constraintTop_toTopOf="@+id/layoutInfoList"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/textViewNameProfile"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Name"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/textName"
+                    app:layout_constraintTop_toTopOf="@+id/layoutInfoList" />
+
+                <TextView
+                    android:id="@+id/textSurname"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Фамилия: "
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    app:layout_constraintEnd_toStartOf="@+id/editTextSurnameProfile"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/editTextSurnameProfile"
+                    app:layout_constraintBottom_toBottomOf="@+id/editTextSurnameProfile"/>
+
+                <EditText
+                    android:id="@+id/editTextSurnameProfile"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/textSurname"
+                    app:layout_constraintTop_toBottomOf="@+id/editTextNameProfile"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/textViewSurnameProfile"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Surname"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/textSurname"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewNameProfile" />
+
+                <TextView
+                    android:id="@+id/textAge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Возраст: "
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    app:layout_constraintEnd_toStartOf="@+id/editTextAgeProfile"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/editTextAgeProfile"
+                    app:layout_constraintBottom_toBottomOf="@+id/editTextAgeProfile"/>
+
+                <EditText
+                    android:id="@+id/editTextAgeProfile"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/textAge"
+                    app:layout_constraintTop_toBottomOf="@+id/editTextSurnameProfile"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/textViewAgeProfile"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Age"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/textAge"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewSurnameProfile" />
+
+                <TextView
+                    android:id="@+id/textDescription"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Описание: "
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    app:layout_constraintEnd_toStartOf="@+id/editTextDescriptionProfile"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/editTextDescriptionProfile"
+                    app:layout_constraintBottom_toBottomOf="@+id/editTextDescriptionProfile"/>
+
+                <EditText
+                    android:id="@+id/editTextDescriptionProfile"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="5dp"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/textDescription"
+                    app:layout_constraintTop_toBottomOf="@+id/editTextAgeProfile"
+                    tools:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/textViewDescriptionProfile"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Description"
+                    android:textColor="@color/black"
+                    android:textSize="20sp"
+                    android:visibility="gone"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/textDescription"
+                    app:layout_constraintTop_toBottomOf="@+id/textViewAgeProfile" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <CheckBox
+                android:id="@+id/checkBoxStudent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Ученик"
+                android:visibility="gone"
+                app:layout_constraintEnd_toStartOf="@+id/checkBoxMentor"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/checkBoxAdmin"
+                tools:visibility="visible" />
+
+            <CheckBox
+                android:id="@+id/checkBoxMentor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Вожатый"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/checkBoxStudent"
+                app:layout_constraintTop_toBottomOf="@+id/checkBoxAdmin"
+                tools:visibility="visible" />
+
+            <CheckBox
+                android:id="@+id/checkBoxAdmin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Админ"
+                android:visibility="gone"
+                app:layout_constraintEnd_toStartOf="@+id/checkBoxTeacher"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/layoutInfoList"
+                tools:visibility="visible" />
+
+            <CheckBox
+                android:id="@+id/checkBoxTeacher"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Учитель"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/checkBoxAdmin"
+                app:layout_constraintTop_toBottomOf="@+id/layoutInfoList"
+                tools:visibility="visible" />
+
+            <Button
+                android:id="@+id/buttonSaveProfile"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:onClick="onClickSaveProfile"
+                android:text="Сохранить"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextNameProfile" />
+                app:layout_constraintTop_toBottomOf="@+id/checkBoxStudent"
+                tools:visibility="visible" />
 
-            <EditText
-                android:id="@+id/editTextAgeProfile"
-                android:layout_width="match_parent"
+            <Button
+                android:id="@+id/buttonChangeImage"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:onClick="onClickChooseImage"
+                android:text="Выбрать изображение"
                 android:visibility="gone"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextSurnameProfile" />
+                app:layout_constraintTop_toBottomOf="@+id/buttonSaveProfile"
+                tools:visibility="visible" />
 
-            <EditText
-                android:id="@+id/editTextDescriptionProfile"
-                android:layout_width="match_parent"
+            <Button
+                android:id="@+id/buttonChangeEmail"
+                style="@style/Widget.MaterialComponents.Button.Icon"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:backgroundTint="@color/design_default_color_error"
+                android:onClick="onClickChangeEmail"
+                android:text="Сменить почту"
                 android:visibility="gone"
+                app:icon="@drawable/ic_right"
+                app:iconGravity="end"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextAgeProfile" />
+                app:layout_constraintTop_toBottomOf="@+id/buttonChangeImage"
+                tools:visibility="visible" />
 
-            <TextView
-                android:id="@+id/textViewNameProfile"
-                android:layout_width="match_parent"
+            <Button
+                android:id="@+id/buttonChangePassword"
+                style="@style/Widget.MaterialComponents.Button.Icon"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Name"
-                android:textSize="20sp"
+                android:backgroundTint="@color/design_default_color_error"
+                android:onClick="onClickChangePassword"
+                android:text="Сменить пароль"
                 android:visibility="gone"
+                app:icon="@drawable/ic_right"
+                app:iconGravity="end"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/editTextDescriptionProfile" />
-
-            <TextView
-                android:id="@+id/textViewSurnameProfile"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Surname"
-                android:textSize="20sp"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textViewNameProfile" />
-
-            <TextView
-                android:id="@+id/textViewAgeProfile"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Age"
-                android:textSize="20sp"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textViewSurnameProfile" />
-
-            <TextView
-                android:id="@+id/textViewDescriptionProfile"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:text="Description"
-                android:textSize="20sp"
-                android:visibility="gone"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textViewAgeProfile" />
+                app:layout_constraintTop_toBottomOf="@+id/buttonChangeEmail"
+                tools:visibility="visible" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <CheckBox
-            android:id="@+id/checkBoxStudent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="Ученик"
-            app:layout_constraintEnd_toStartOf="@+id/checkBoxMentor"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/checkBoxAdmin" />
-
-        <CheckBox
-            android:id="@+id/checkBoxMentor"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="Вожатый"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/checkBoxStudent"
-            app:layout_constraintTop_toBottomOf="@+id/checkBoxAdmin" />
-
-        <CheckBox
-            android:id="@+id/checkBoxAdmin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="Админ"
-            app:layout_constraintEnd_toStartOf="@+id/checkBoxTeacher"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/layoutInfoList" />
-
-        <CheckBox
-            android:id="@+id/checkBoxTeacher"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            android:text="Учитель"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
-            app:layout_constraintStart_toEndOf="@+id/checkBoxAdmin"
-            app:layout_constraintTop_toBottomOf="@+id/layoutInfoList" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,4 +1,4 @@
-package com.example.justbootupffs;
+package com.example.justbootupffs.Activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
@@ -29,6 +29,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.bumptech.glide.Glide;
 import com.example.justbootupffs.Entity.User;
+import com.example.justbootupffs.R;
 import com.example.justbootupffs.Service.UserService;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -48,8 +49,8 @@ import org.jetbrains.annotations.NotNull;
 import java.io.ByteArrayOutputStream;
 import java.util.UUID;
 
-import static com.example.justbootupffs.LoginActivity.DATABASE_URL;
-import static com.example.justbootupffs.LoginActivity.USER_DATABASE;
+import static com.example.justbootupffs.Activity.LoginActivity.DATABASE_URL;
+import static com.example.justbootupffs.Activity.LoginActivity.USER_DATABASE;
 
 public class ProfileActivity extends AppCompatActivity {
     private EditText textName, textSurname, textAge, textDescription;
@@ -102,15 +103,14 @@ public class ProfileActivity extends AppCompatActivity {
                             textName.setText(selectedUser.getName());
                             textSurname.setText(selectedUser.getSurname());
                             if (currentUser.isAdmin()) {
+                                checkBoxTeacher.setVisibility(View.VISIBLE);
+                                checkBoxStudent.setVisibility(View.VISIBLE);
+                                checkBoxMentor.setVisibility(View.VISIBLE);
+                                checkBoxAdmin.setVisibility(View.VISIBLE);
                                 checkBoxAdmin.setChecked(selectedUser.isAdmin());
                                 checkBoxMentor.setChecked(selectedUser.isMentor());
                                 checkBoxStudent.setChecked(selectedUser.isStudent());
                                 checkBoxTeacher.setChecked(selectedUser.isTeacher());
-                            } else {
-                                checkBoxTeacher.setVisibility(View.GONE);
-                                checkBoxStudent.setVisibility(View.GONE);
-                                checkBoxMentor.setVisibility(View.GONE);
-                                checkBoxAdmin.setVisibility(View.GONE);
                             }
                             textDescription.setText(selectedUser.getDescription());
                         } else {
@@ -118,10 +118,6 @@ public class ProfileActivity extends AppCompatActivity {
                             textViewDescription.setVisibility(View.VISIBLE);
                             textViewName.setVisibility(View.VISIBLE);
                             textViewSurname.setVisibility(View.VISIBLE);
-                            checkBoxAdmin.setVisibility(View.GONE);
-                            checkBoxMentor.setVisibility(View.GONE);
-                            checkBoxStudent.setVisibility(View.GONE);
-                            checkBoxTeacher.setVisibility(View.GONE);
                             textViewName.setText(selectedUser.getName());
                             textViewSurname.setText(selectedUser.getSurname());
                             textViewDescription.setText(selectedUser.getDescription());

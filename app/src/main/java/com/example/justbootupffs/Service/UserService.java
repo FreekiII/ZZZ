@@ -137,4 +137,8 @@ public class UserService {
     public User getUser() {
         return this.user;
     }
+
+    public void setEmail(String email) {
+        this.user.email = email;
+    }
 }
